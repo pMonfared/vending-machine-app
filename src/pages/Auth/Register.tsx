@@ -4,24 +4,45 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+// import FormControlLabel from "@mui/material/FormControlLabel";
+// import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function SignUp() {
+  const [username, setUsername] = React.useState("");
+  const [role, setRole] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [error, setError] = React.useState("");
+  const auth = useAuth();
   const navigate = useNavigate();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    // const data = new FormData(event.currentTarget);
+
+    if (!password || !confirmPassword) {
+      setError("Passwords and ConfirmPassword are not allow empty");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Password do not match.");
+      return;
+    }
+
+    try {
+      await auth.register(username, password, role);
+      navigate("/");
+    } catch (err: any) {
+      console.log("err", err);
+      setError(`${err?.response?.statusText}: ${err?.response?.data?.message}`);
+    }
   };
 
   return (
@@ -43,35 +64,28 @@ export default function SignUp() {
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="given-name"
-                name="firstName"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
+                id="username"
+                label="User name"
+                name="username"
+                autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                name="role"
+                label="Role"
+                type="text"
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -83,13 +97,24 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+              <TextField
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
+            </Grid>
+            <Grid item xs={12}>
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </Grid>
           </Grid>
           <Button
@@ -118,71 +143,3 @@ export default function SignUp() {
     </Container>
   );
 }
-
-// import React, { useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import { useAuth } from "../../hooks/useAuth";
-// import { TextField, Button } from "@material-ui/core";
-
-// const Register = () => {
-//   const [username, setUsername] = useState("");
-//   const [role, setRole] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [confirmPassword, setConfirmPassword] = useState("");
-//   const [error, setError] = useState("");
-//   const auth = useAuth();
-//   const navigate = useNavigate();
-
-//   const handleSubmit = async (e: { preventDefault: () => void }) => {
-//     e.preventDefault();
-
-//     if (password !== confirmPassword) {
-//       setError("Passwords do not match.");
-//       return;
-//     }
-
-//     try {
-//       await auth.register(username, password, role);
-//       navigate("/");
-//     } catch (err: any) {
-//       setError(err?.message);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>Register</h1>
-//       <form onSubmit={handleSubmit}>
-//         <TextField
-//           label="Username"
-//           type="text"
-//           value={username}
-//           onChange={(e) => setUsername(e.target.value)}
-//         />
-//         <TextField
-//           label="Role"
-//           type="text"
-//           value={role}
-//           onChange={(e) => setRole(e.target.value)}
-//         />
-//         <TextField
-//           label="Password"
-//           type="password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//         />
-//         <TextField
-//           label="Confirm Password"
-//           type="password"
-//           value={confirmPassword}
-//           onChange={(e) => setConfirmPassword(e.target.value)}
-//         />
-//         <Button type="submit">Register</Button>
-//       </form>
-//       {error && <p style={{ color: "red" }}>{error}</p>}
-//       <Link to="/login">Login</Link>
-//     </div>
-//   );
-// };
-
-// export default Register;

@@ -1,42 +1,32 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import {
+  Button,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Link,
+  Paper,
+  Box,
+  Avatar,
+  Typography,
+  CssBaseline,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-export default function SignInSide() {
+interface LoginProps {
+  onLogin: (username: string, password: string) => void;
+}
+
+const LoginForm: React.FC<LoginProps> = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
 
-  const auth = useAuth();
-  const navigate = useNavigate();
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLoginClick = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!username || !password) {
-      setError("Username and password are not allow empty");
-      return;
-    }
-
-    try {
-      await auth.login(username, password);
-      navigate("/");
-    } catch (err: any) {
-      console.log("What a error:", err);
-      setError(`${err?.response?.statusText}: ${err?.response?.data?.message}`);
-    }
+    onLogin(username, password);
   };
 
   return (
@@ -77,7 +67,7 @@ export default function SignInSide() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleLoginClick}
             sx={{ mt: 1 }}
           >
             <TextField
@@ -104,13 +94,10 @@ export default function SignInSide() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
-            <Grid item xs={12}>
-              {error && <p style={{ color: "red" }}>{error}</p>}
-            </Grid>
-            {/* <FormControlLabel
+            <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            /> */}
+            />
             <Button
               type="submit"
               fullWidth
@@ -142,4 +129,6 @@ export default function SignInSide() {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default LoginForm;

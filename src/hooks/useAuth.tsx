@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import authSlice from "../reducers/authSlice";
-import { api } from "../services/api";
+import { login as apiLogin, register as apiRegister } from "../services/api";
 
 interface AuthHook {
   user: any | null;
@@ -16,12 +16,7 @@ export const useAuth = (): AuthHook => {
   const dispatch = useDispatch();
 
   const login = async (username: string, password: string) => {
-    const response = await api.post("/auth/login", {
-      username,
-      password,
-    });
-
-    const { user, token } = response.data;
+    const { user, token } = await apiLogin(username, password);
 
     dispatch(authSlice.actions.login({ user, token }));
   };
@@ -31,13 +26,7 @@ export const useAuth = (): AuthHook => {
   };
 
   const register = async (username: string, password: string, role: string) => {
-    const response = await api.post("/auth/register", {
-      username,
-      password,
-      role,
-    });
-
-    const { user, token } = response.data;
+    const { user, token } = await apiRegister(username, password, role);
 
     dispatch(authSlice.actions.login({ user, token }));
   };
