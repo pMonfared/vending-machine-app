@@ -1,25 +1,32 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
-import App from "./App";
-import theme from "./theme";
 import { Provider } from "react-redux";
-import store from "./store";
-import "./index.css";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { PersistGate } from "redux-persist/integration/react";
 import reportWebVitals from "./reportWebVitals";
 
-const rootElement = document.getElementById("root");
+import { persistor, store } from "./store"; // Import the Redux store and persistor
+import "./index.css";
+import App from "./App"; // Import your main application component
+
+const rootElement = document.getElementById("root"); // Get the root element in the HTML
 const root = ReactDOM.createRoot(rootElement!);
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
+      {/* Provide the Redux store to the application */}
+      <PersistGate loading={null} persistor={persistor}>
+        {/* Add Redux-Persist gate */}
+        <BrowserRouter>
+          {/* Set up routing with BrowserRouter */}
+          <Routes>
+            {/* Define routes using the Routes component */}
+            <Route path="/*" element={<App />} />{" "}
+            {/* Define a route for your main App component */}
+          </Routes>
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 );

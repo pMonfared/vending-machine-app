@@ -32,7 +32,7 @@ export default function SignInSide() {
 
     try {
       await auth.login(username, password);
-      navigate("/");
+      navigate("/home");
     } catch (err: any) {
       console.log("What a error:", err);
       setError(`${err?.response?.statusText}: ${err?.response?.data?.message}`);

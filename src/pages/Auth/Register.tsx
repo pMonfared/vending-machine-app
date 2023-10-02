@@ -38,7 +38,7 @@ export default function SignUp() {
 
     try {
       await auth.register(username, password, role);
-      navigate("/");
+      navigate("/home");
     } catch (err: any) {
       console.log("err", err);
       setError(`${err?.response?.statusText}: ${err?.response?.data?.message}`);

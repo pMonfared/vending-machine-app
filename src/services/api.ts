@@ -1,13 +1,24 @@
 import axios from "axios";
+import { store } from "../store";
 
 // Define your base URL here
 const baseURL = "http://localhost:3000";
 
+// Create an instance of Axios with a base URL and default headers
 const api = axios.create({
   baseURL,
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+// Intercept requests to add authorization token if available in the Redux store
+api.interceptors.request.use((request) => {
+  const token = store.getState().auth.token;
+  if (token) {
+    request.headers.Authorization = `Bearer ${token}`;
+  }
+  return request;
 });
 
 // Add a response interceptor to handle errors globally

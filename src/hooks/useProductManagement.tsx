@@ -7,8 +7,9 @@ import {
 } from "../services/api";
 
 interface Product {
-  id: number;
+  _id: number;
   productName: string;
+  amountAvailable: number;
   cost: number;
   // Add other fields as needed
 }
@@ -44,7 +45,7 @@ export const useProductManagement = (): ProductManagementHook => {
 
       if (response.success) {
         const updatedProducts = products.map((product) =>
-          product.id === productId ? response.data : product
+          product._id === productId ? response.data : product
         );
         setProducts(updatedProducts);
       } else {
@@ -61,7 +62,7 @@ export const useProductManagement = (): ProductManagementHook => {
 
       if (response.success) {
         const updatedProducts = products.filter(
-          (product) => product.id !== productId
+          (product) => product._id !== productId
         );
         setProducts(updatedProducts);
       } else {
@@ -76,8 +77,8 @@ export const useProductManagement = (): ProductManagementHook => {
     try {
       const response = await apiGetAllProducts();
 
-      if (response.success) {
-        setProducts(response.data);
+      if (response) {
+        setProducts(response);
       } else {
         // Handle fetch products error
       }
