@@ -4,6 +4,7 @@ import Register from "../pages/Auth/Register";
 import Home from "../pages/Home";
 import ProductList from "../pages/Product/ProductList";
 import CreateProduct from "../pages/Product/CreateProduct";
+import UpdateProduct from "../pages/Product/UpdateProduct";
 import Layout from "../components/Common/Layout";
 import Public from "../components/Common/Public";
 import RequireAuth from "../components/Auth/RequireAuth";
@@ -21,6 +22,7 @@ const MyRoutes = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/add" element={<CreateProduct />} />
+          <Route path="/products/edit/:id" element={<UpdateProduct />} />
         </Route>
       </Route>
     </Routes>

@@ -11,11 +11,13 @@ import {
 } from "@material-ui/core";
 import { useProductManagement } from "./../../hooks/useProductManagement";
 import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
 
 interface Product {
-  _id: number;
+  _id: string;
   productName: string;
   cost: number;
+  amountAvailable: number;
   // Add other fields as needed
 }
 
@@ -23,14 +25,22 @@ const ProductList: React.FC<{}> = () => {
   const [products, setProducts] = useState<Array<Product>>([]);
   const useProduct = useProductManagement();
 
-  useEffect(() => {
-    async function fetchProducts() {
-      await useProduct.fetchAllProducts();
-      setProducts(useProduct.products);
-    }
+  const fetchProducts = async () => {
+    await useProduct.fetchAllProducts();
+  };
 
+  const deleteProduct = async (id: string) => {
+    await useProduct.removeProduct(id);
+  };
+
+  useEffect(() => {
     fetchProducts();
-  }, [useProduct]);
+  }, []);
+
+  useEffect(() => {
+    setProducts(useProduct.products);
+    console.log("refreshed", Math.random());
+  }, [useProduct.products]);
 
   return (
     <Box className="product-list-page">
@@ -40,15 +50,25 @@ const ProductList: React.FC<{}> = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
+              <TableCell>Cost</TableCell>
+              <TableCell>Available</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {products.map((product) => (
               <TableRow key={product._id}>
-                <TableCell>{product._id}</TableCell>
                 <TableCell>{product.productName}</TableCell>
+                <TableCell>{product.cost}</TableCell>
+                <TableCell>{product.amountAvailable}</TableCell>
+
+                <TableCell>
+                  <Link to={`/products/edit/${product._id}`}>Edit</Link> |
+                  <Button onClick={() => deleteProduct(product._id)}>
+                    Delete
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

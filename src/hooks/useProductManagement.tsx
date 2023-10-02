@@ -5,9 +5,11 @@ import {
   deleteProduct as apiDeleteProduct,
   getAllProducts as apiGetAllProducts,
 } from "../services/api";
+import { useAppDispatch } from ".";
+import { setProducts as actionSetProducts } from "./../reducers/productManagementSlice";
 
-interface Product {
-  _id: number;
+export interface Product {
+  _id: string;
   productName: string;
   amountAvailable: number;
   cost: number;
@@ -17,12 +19,13 @@ interface Product {
 interface ProductManagementHook {
   products: Product[];
   addProduct: (productData: any) => Promise<void>;
-  editProduct: (productId: number, updatedData: any) => Promise<void>;
-  removeProduct: (productId: number) => Promise<void>;
+  editProduct: (productId: string, updatedData: any) => Promise<void>;
+  removeProduct: (productId: string) => Promise<void>;
   fetchAllProducts: () => Promise<void>;
 }
 
 export const useProductManagement = (): ProductManagementHook => {
+  const dispatch = useAppDispatch();
   const [products, setProducts] = useState<Product[]>([]);
 
   const addProduct = async (productData: any) => {
@@ -31,6 +34,7 @@ export const useProductManagement = (): ProductManagementHook => {
 
       if (response.success) {
         setProducts([...products, response.data]);
+        dispatch(actionSetProducts([...products, response.data]));
       } else {
         // Handle add product error
       }
@@ -39,7 +43,7 @@ export const useProductManagement = (): ProductManagementHook => {
     }
   };
 
-  const editProduct = async (productId: number, updatedData: any) => {
+  const editProduct = async (productId: string, updatedData: any) => {
     try {
       const response = await apiUpdateProduct(productId, updatedData);
 
@@ -48,6 +52,7 @@ export const useProductManagement = (): ProductManagementHook => {
           product._id === productId ? response.data : product
         );
         setProducts(updatedProducts);
+        dispatch(actionSetProducts(updatedProducts));
       } else {
         // Handle edit product error
       }
@@ -56,15 +61,16 @@ export const useProductManagement = (): ProductManagementHook => {
     }
   };
 
-  const removeProduct = async (productId: number) => {
+  const removeProduct = async (productId: string) => {
     try {
       const response = await apiDeleteProduct(productId);
 
       if (response.success) {
         const updatedProducts = products.filter(
-          (product) => product._id !== productId
+          (product: Product) => product._id !== productId
         );
         setProducts(updatedProducts);
+        dispatch(actionSetProducts(updatedProducts));
       } else {
         // Handle remove product error
       }
@@ -79,6 +85,7 @@ export const useProductManagement = (): ProductManagementHook => {
 
       if (response) {
         setProducts(response);
+        dispatch(actionSetProducts(response));
       } else {
         // Handle fetch products error
       }

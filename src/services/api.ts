@@ -96,7 +96,7 @@ export const createProduct = async (productData: ProductData) => {
 };
 
 export const updateProduct = async (
-  productId: number,
+  productId: string,
   updatedData: ProductData
 ) => {
   try {
@@ -107,7 +107,7 @@ export const updateProduct = async (
   }
 };
 
-export const deleteProduct = async (productId: number) => {
+export const deleteProduct = async (productId: string) => {
   try {
     const response = await api.delete(`/products/${productId}`);
     return response.data;
