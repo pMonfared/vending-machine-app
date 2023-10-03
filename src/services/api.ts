@@ -144,16 +144,6 @@ export const buyProduct = async (productId: string, quantity: number) => {
   }
 };
 
-// Buy Products API
-export const buyProducts = async (cart: any) => {
-  try {
-    const response = await api.post("/buy", cart);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 // Add deposit
 export const updateDeposit = async (amount: number) => {
   try {
