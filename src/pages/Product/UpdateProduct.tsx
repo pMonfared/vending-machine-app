@@ -23,7 +23,7 @@ const UpdateProduct: React.FC<{}> = () => {
 
   useEffect(() => {
     function fetchProduct() {
-      const product = products?.find((p: Product) => p._id == id);
+      const product = products?.find((p: Product) => p._id === id);
       if (product) {
         setProductName(product?.productName);
         setCost(product?.cost);
@@ -32,7 +32,7 @@ const UpdateProduct: React.FC<{}> = () => {
     }
 
     fetchProduct();
-  }, [products, id]);
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

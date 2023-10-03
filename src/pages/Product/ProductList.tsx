@@ -63,12 +63,24 @@ const ProductList: React.FC<{}> = () => {
     <Box className="product-list-page">
       <Header title="Products" />
       {auth.user.role === "seller" && (
-        <Link to="/products/add">Add new Product</Link>
+        <div style={{ marginTop: 10, marginLeft: 10 }}>
+          <Button
+            color="primary"
+            type="button"
+            variant="contained"
+            onClick={() => navigate("/products/add")}
+          >
+            Add new Product
+          </Button>
+        </div>
       )}
 
       <BuyProduct
         isOpen={buyProductDialogIsOpen}
-        onClose={() => setBuyProductDialogIsOpen(false)}
+        onClose={() => {
+          setBuyProductDialogIsOpen(false);
+          setBuyProduct(undefined);
+        }}
         product={buyTheProduct}
       />
 
@@ -85,15 +97,15 @@ const ProductList: React.FC<{}> = () => {
           <TableBody>
             {products &&
               products.map((product) => (
-                <TableRow key={product._id}>
-                  <TableCell>{product.productName}</TableCell>
-                  <TableCell>{product.cost}</TableCell>
-                  <TableCell>{product.amountAvailable}</TableCell>
+                <TableRow key={product?._id}>
+                  <TableCell>{product?.productName}</TableCell>
+                  <TableCell>{product?.cost}</TableCell>
+                  <TableCell>{product?.amountAvailable}</TableCell>
 
                   {auth.user.role === "seller" && (
                     <TableCell>
-                      <Link to={`/products/edit/${product._id}`}>Edit</Link> |
-                      <Button onClick={() => deleteProduct(product._id)}>
+                      <Link to={`/products/edit/${product?._id}`}>Edit</Link> |
+                      <Button onClick={() => deleteProduct(product?._id)}>
                         Delete
                       </Button>
                     </TableCell>
@@ -101,7 +113,7 @@ const ProductList: React.FC<{}> = () => {
 
                   {auth.user.role === "buyer" && (
                     <TableCell>
-                      <Button onClick={() => buyProduct(product._id)}>
+                      <Button onClick={() => buyProduct(product?._id)}>
                         Buy
                       </Button>
                     </TableCell>

@@ -6,28 +6,58 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Product } from "../../hooks/useProductManagement";
+import {
+  Product,
+  useProductManagement,
+} from "../../hooks/useProductManagement";
+import { Grid } from "@mui/material";
 
 const BuyProduct: React.FC<{
   isOpen: boolean;
   product?: Product;
   onClose?: () => void;
 }> = ({ isOpen, product, onClose }) => {
+  const productHook = useProductManagement();
+
+  const [error, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [amount, setAmount] = React.useState<number>(0);
 
   React.useEffect(() => {
-    console.log("IsOpen", isOpen);
     setOpen(isOpen);
+    setAmount(0);
+    setError("");
   }, [isOpen]);
 
   const handleClose = () => {
     setOpen(false);
+    setError("");
+    setAmount(0);
     if (onClose) onClose();
   };
 
-  const handlePurchase = () => {
-    setAmount(0);
+  const handlePurchase = async () => {
+    try {
+      if (product) {
+        if (amount <= 0) {
+          setError("Please enter more than 0");
+          return;
+        }
+        if (amount > product.amountAvailable) {
+          setError(
+            "You can't buy more than product available amount: " +
+              product.amountAvailable
+          );
+          return;
+        }
+        await productHook.purchaseProduct(product._id, amount);
+        setAmount(0);
+        handleClose();
+      }
+    } catch (err: any) {
+      console.log(err);
+      setError(`${err?.response?.statusText}: ${err?.response?.data?.message}`);
+    }
   };
 
   return (
@@ -36,7 +66,7 @@ const BuyProduct: React.FC<{
         <DialogTitle>Purchase {product?.productName}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To buy to this product, please choose Quantity amount here.
+            To buy to this product, please enter Quantity here.
           </DialogContentText>
           <TextField
             autoFocus
@@ -47,8 +77,14 @@ const BuyProduct: React.FC<{
             fullWidth
             variant="standard"
             value={amount}
-            onChange={(event) => setAmount(parseInt(event.target.value))}
+            onChange={(event) => {
+              setAmount(parseInt(event.target.value));
+              setError("");
+            }}
           />
+          <Grid item xs={12}>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

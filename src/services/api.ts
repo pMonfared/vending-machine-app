@@ -125,6 +125,15 @@ export const getAllProducts = async () => {
   }
 };
 
+export const getAllMyPurchasedProducts = async () => {
+  try {
+    const response = await api.get("/products/purchased");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Buy Product API
 export const buyProduct = async (productId: string, quantity: number) => {
   try {

@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from "./index";
 import {
   login as actionLogin,
   logout as actionLogout,
-  deposit as actionDeposit,
+  updateDeposit as actionDeposit,
   resetDeposit as actionResetDeposit,
 } from "../reducers/authSlice";
 import {

@@ -28,11 +28,17 @@ const Header: React.FC<{
         </Grid>
         <Grid item alignItems={"flex-end"}>
           <h4>Welcome, {auth.user.username}!</h4>
-          {auth.user.role === "buyer" && (
+          {auth.user.role === "buyer" && [
             <h5>
               <Link to={"/deposit"}>Available Deposit: {auth.deposit}</Link>
-            </h5>
-          )}
+            </h5>,
+            <h5>
+              <Link to={"/purchased"}>Purchased</Link>
+            </h5>,
+          ]}
+          <h5>
+            <Link to={"/products"}>Products</Link>
+          </h5>
           <LogoutButton />
         </Grid>
       </Grid>
