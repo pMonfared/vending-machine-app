@@ -10,9 +10,10 @@ import {
 } from "@material-ui/core";
 import { useProductManagement } from "./../../hooks/useProductManagement";
 import { useAuth } from "../../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import Header from "../../components/Common/Header";
+import BuyProduct from "./BuyProduct";
 
 interface Product {
   _id: string;
@@ -23,6 +24,12 @@ interface Product {
 }
 
 const ProductList: React.FC<{}> = () => {
+  const navigate = useNavigate();
+
+  const [buyProductDialogIsOpen, setBuyProductDialogIsOpen] =
+    React.useState<boolean>(false);
+  const [buyTheProduct, setBuyProduct] = React.useState<Product>();
+
   const [products, setProducts] = useState<Array<Product>>([]);
   const useProduct = useProductManagement();
   const auth = useAuth();
@@ -35,8 +42,13 @@ const ProductList: React.FC<{}> = () => {
     await useProduct.removeProduct(id);
   };
 
-  const buyProduct = async (id: string) => {
-    console.log("buy ", id);
+  const buyProduct = (id: string) => {
+    if (auth.deposit === 0) {
+      navigate("/deposit");
+    } else {
+      setBuyProduct(products.find((p) => p._id === id));
+      setBuyProductDialogIsOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -53,6 +65,13 @@ const ProductList: React.FC<{}> = () => {
       {auth.user.role === "seller" && (
         <Link to="/products/add">Add new Product</Link>
       )}
+
+      <BuyProduct
+        isOpen={buyProductDialogIsOpen}
+        onClose={() => setBuyProductDialogIsOpen(false)}
+        product={buyTheProduct}
+      />
+
       <TableContainer>
         <Table>
           <TableHead>
