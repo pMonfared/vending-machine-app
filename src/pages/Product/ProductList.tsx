@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Typography,
   Table,
   TableBody,
   TableCell,
@@ -10,8 +9,10 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { useProductManagement } from "./../../hooks/useProductManagement";
+import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
+import Header from "../../components/Common/Header";
 
 interface Product {
   _id: string;
@@ -24,6 +25,7 @@ interface Product {
 const ProductList: React.FC<{}> = () => {
   const [products, setProducts] = useState<Array<Product>>([]);
   const useProduct = useProductManagement();
+  const auth = useAuth();
 
   const fetchProducts = async () => {
     await useProduct.fetchAllProducts();
@@ -33,19 +35,24 @@ const ProductList: React.FC<{}> = () => {
     await useProduct.removeProduct(id);
   };
 
+  const buyProduct = async (id: string) => {
+    console.log("buy ", id);
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []);
 
   useEffect(() => {
     setProducts(useProduct.products);
-    console.log("refreshed", Math.random());
   }, [useProduct.products]);
 
   return (
     <Box className="product-list-page">
-      <Typography variant="h3">Product List</Typography>
-      <Link to="/products/add">Add new Product</Link>
+      <Header title="Products" />
+      {auth.user.role === "seller" && (
+        <Link to="/products/add">Add new Product</Link>
+      )}
       <TableContainer>
         <Table>
           <TableHead>
@@ -57,20 +64,31 @@ const ProductList: React.FC<{}> = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product) => (
-              <TableRow key={product._id}>
-                <TableCell>{product.productName}</TableCell>
-                <TableCell>{product.cost}</TableCell>
-                <TableCell>{product.amountAvailable}</TableCell>
+            {products &&
+              products.map((product) => (
+                <TableRow key={product._id}>
+                  <TableCell>{product.productName}</TableCell>
+                  <TableCell>{product.cost}</TableCell>
+                  <TableCell>{product.amountAvailable}</TableCell>
 
-                <TableCell>
-                  <Link to={`/products/edit/${product._id}`}>Edit</Link> |
-                  <Button onClick={() => deleteProduct(product._id)}>
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+                  {auth.user.role === "seller" && (
+                    <TableCell>
+                      <Link to={`/products/edit/${product._id}`}>Edit</Link> |
+                      <Button onClick={() => deleteProduct(product._id)}>
+                        Delete
+                      </Button>
+                    </TableCell>
+                  )}
+
+                  {auth.user.role === "buyer" && (
+                    <TableCell>
+                      <Button onClick={() => buyProduct(product._id)}>
+                        Buy
+                      </Button>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

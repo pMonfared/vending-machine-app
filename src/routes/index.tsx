@@ -8,6 +8,7 @@ import UpdateProduct from "../pages/Product/UpdateProduct";
 import Layout from "../components/Common/Layout";
 import Public from "../components/Common/Public";
 import RequireAuth from "../components/Auth/RequireAuth";
+import Deposit from "../pages/User/Deposit";
 
 const MyRoutes = () => {
   return (
@@ -23,6 +24,7 @@ const MyRoutes = () => {
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/add" element={<CreateProduct />} />
           <Route path="/products/edit/:id" element={<UpdateProduct />} />
+          <Route path="/deposit" element={<Deposit />} />
         </Route>
       </Route>
     </Routes>

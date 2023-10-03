@@ -125,10 +125,40 @@ export const getAllProducts = async () => {
   }
 };
 
+// Buy Product API
+export const buyProduct = async (productId: string, quantity: number) => {
+  try {
+    const response = await api.post("/products/buy", { productId, quantity });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Buy Products API
 export const buyProducts = async (cart: any) => {
   try {
     const response = await api.post("/buy", cart);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Add deposit
+export const updateDeposit = async (amount: number) => {
+  try {
+    const response = await api.post("/users/deposit", { amount });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Reset deposit
+export const resetDeposit = async () => {
+  try {
+    const response = await api.post("/users/deposit/reset");
     return response.data;
   } catch (error) {
     throw error;

@@ -4,6 +4,7 @@ import {
   updateProduct as apiUpdateProduct,
   deleteProduct as apiDeleteProduct,
   getAllProducts as apiGetAllProducts,
+  buyProduct as apiBuyProduct,
 } from "../services/api";
 import { useAppDispatch } from ".";
 import { setProducts as actionSetProducts } from "./../reducers/productManagementSlice";
@@ -21,6 +22,7 @@ interface ProductManagementHook {
   addProduct: (productData: any) => Promise<void>;
   editProduct: (productId: string, updatedData: any) => Promise<void>;
   removeProduct: (productId: string) => Promise<void>;
+  purchaseProduct: (productId: string, quantity: number) => Promise<void>;
   fetchAllProducts: () => Promise<void>;
 }
 
@@ -32,7 +34,7 @@ export const useProductManagement = (): ProductManagementHook => {
     try {
       const response = await apiCreateProduct(productData);
 
-      if (response.success) {
+      if (response) {
         setProducts([...products, response.data]);
         dispatch(actionSetProducts([...products, response.data]));
       } else {
@@ -47,7 +49,7 @@ export const useProductManagement = (): ProductManagementHook => {
     try {
       const response = await apiUpdateProduct(productId, updatedData);
 
-      if (response.success) {
+      if (response) {
         const updatedProducts = products.map((product) =>
           product._id === productId ? response.data : product
         );
@@ -65,7 +67,25 @@ export const useProductManagement = (): ProductManagementHook => {
     try {
       const response = await apiDeleteProduct(productId);
 
-      if (response.success) {
+      if (response) {
+        const updatedProducts = products.filter(
+          (product: Product) => product._id !== productId
+        );
+        setProducts(updatedProducts);
+        dispatch(actionSetProducts(updatedProducts));
+      } else {
+        // Handle remove product error
+      }
+    } catch (error) {
+      // Handle network or other errors
+    }
+  };
+
+  const purchaseProduct = async (productId: string, quantity: number) => {
+    try {
+      const response = await apiBuyProduct(productId, quantity);
+
+      if (response) {
         const updatedProducts = products.filter(
           (product: Product) => product._id !== productId
         );
@@ -99,6 +119,7 @@ export const useProductManagement = (): ProductManagementHook => {
     addProduct,
     editProduct,
     removeProduct,
+    purchaseProduct,
     fetchAllProducts,
   };
 };
