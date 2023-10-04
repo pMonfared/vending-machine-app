@@ -1,46 +1,64 @@
-# Getting Started with Create React App
+To run the **vending-machine-app** project:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Clone the repository:
 
-## Available Scripts
+```
+git clone https://github.com/pMonfared/vending-machine-app.git
+```
 
-In the project directory, you can run:
+2. Navigate to the project directory:
 
-### `npm start`
+```
+cd vending-machine-app
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+3. Install the dependencies:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+npm install
+```
 
-### `npm test`
+4. Start the project:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+npm start
+```
 
-### `npm run build`
+This will start a development server on port 3000. You can open the application in your browser by navigating to `http://localhost:3000`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Example:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+git clone https://github.com/pMonfared/vending-machine-app.git
+cd vending-machine-app
+npm install
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Additional notes:**
 
-### `npm run eject`
+- If you are using a different port, you can specify it using the `PORT` environment variable. For example, to start the development server on port 8080, you would run the following command:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+PORT=8080 npm start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- The project also includes a Dockerfile, so you can build and run a Docker image of the application. To do this, run the following commands:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+docker build -t vending-machine-app .
+docker run -p 3000:3000 vending-machine-app
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+This will start the application in a Docker container on port 3000.
 
-## Learn More
+**Troubleshooting:**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+If you are having trouble running the project, please check the following:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Make sure that you have installed all of the required dependencies.
+- Make sure that you are running the project from the correct directory.
+- Make sure that you have configured the project correctly, such as setting the `PORT` environment variable.
+- Check the project documentation for any additional troubleshooting tips.
+
+If you are still having trouble, please feel free to create an issue on the project's GitHub repository.
