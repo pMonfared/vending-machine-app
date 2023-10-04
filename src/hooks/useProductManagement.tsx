@@ -104,7 +104,7 @@ export const useProductManagement = (): ProductManagementHook => {
 
       let product = { ...foundProduct };
       if (product) {
-        product.amountAvailable = response.productsPurchased.amountAvailable;
+        product.amountAvailable = response.productPurchased.amountAvailable;
 
         let updatedProducts = products.map((product: Product) =>
           product._id === productId ? product : product

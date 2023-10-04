@@ -26,8 +26,10 @@ const BuyProduct: React.FC<{
   React.useEffect(() => {
     setOpen(isOpen);
     setAmount(0);
-    setError("");
-  }, [isOpen]);
+    if (product?.amountAvailable === 0) {
+      setError("Product is out of stock");
+    } else setError("");
+  }, [isOpen, product]);
 
   const handleClose = () => {
     setOpen(false);
@@ -43,6 +45,12 @@ const BuyProduct: React.FC<{
           setError("Please enter more than 0");
           return;
         }
+
+        if (product.amountAvailable === 0) {
+          setError("Product is out of stock");
+          return;
+        }
+
         if (amount > product.amountAvailable) {
           setError(
             "You can't buy more than product available amount: " +

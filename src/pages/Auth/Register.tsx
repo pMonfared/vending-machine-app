@@ -13,10 +13,17 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useAuth } from "../../hooks/useAuth";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import { MenuItem } from "material-ui";
 
 export default function SignUp() {
   const [username, setUsername] = React.useState("");
-  const [role, setRole] = React.useState("");
+  const [role, setRole] = React.useState("buyer");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [error, setError] = React.useState("");
@@ -25,6 +32,16 @@ export default function SignUp() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // const data = new FormData(event.currentTarget);
+
+    if (!username) {
+      setError("Username is not allow empty");
+      return;
+    }
+
+    if (!role) {
+      setError("Role is not allow empty, enter 'buyer' or 'seller'");
+      return;
+    }
 
     if (!password || !confirmPassword) {
       setError("Passwords and ConfirmPassword are not allow empty");
@@ -43,6 +60,10 @@ export default function SignUp() {
       console.log("err", err);
       setError(`${err?.response?.statusText}: ${err?.response?.data?.message}`);
     }
+  };
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setRole(event.target.value);
   };
 
   return (
@@ -77,16 +98,19 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="role"
-                label="Role"
-                type="text"
-                id="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              />
+              <FormControl fullWidth>
+                <InputLabel id="role-label">Role</InputLabel>
+                <Select
+                  labelId="role-label"
+                  id="role"
+                  value={role}
+                  label="Role"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={"buyer"}>Buyer</MenuItem>
+                  <MenuItem value={"seller"}>Seller</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
