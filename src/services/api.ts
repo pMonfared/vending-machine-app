@@ -137,7 +137,7 @@ export const getAllMyPurchasedProducts = async () => {
 // Buy Product API
 export const buyProduct = async (productId: string, quantity: number) => {
   try {
-    const response = await api.post(`/products/${productId}/buy`, { quantity });
+    const response = await api.post(`/products/buy`, { productId, quantity });
     return response.data;
   } catch (error) {
     throw error;
