@@ -1,5 +1,7 @@
 To run the **vending-machine-app** project:
 
+**A modern React-Redux based on TypeScript**
+
 1. Clone the repository:
 
 ```
@@ -51,6 +53,20 @@ docker run -p 3000:3000 vending-machine-app
 ```
 
 This will start the application in a Docker container on port 3000.
+
+**Pages:**
+It consists of the following pages:
+
+```
+- Login
+- Register
+- User (buyer)
+  - Deposit (also allows deposit reset)
+  - Buy Products (product list)
+  - Purchased Products (list of purchased products)
+- User (seller)
+  - Products (add, edit, delete)
+```
 
 **Troubleshooting:**
 
